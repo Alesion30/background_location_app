@@ -43,5 +43,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>私に位置情報ください</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>バックグラウンドで位置情報取ります</string>
 </dict>
 </plist>
