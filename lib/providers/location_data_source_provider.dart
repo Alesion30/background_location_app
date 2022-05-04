@@ -1,6 +1,7 @@
+import 'package:background_location_app/model/location.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as loc;
 
 import 'sqlite_provider.dart';
 
@@ -17,7 +18,7 @@ class LocationDataSource extends ChangeNotifier {
   static const tableName = 'Locations';
   late final sqlite = ref.read(sqliteProvider);
 
-  Future<void> add(LocationData data) async {
+  Future<void> add(loc.LocationData data) async {
     final now = DateTime.now();
     await sqlite.insert(
       tableName,
@@ -30,8 +31,9 @@ class LocationDataSource extends ChangeNotifier {
     );
   }
 
-  Future<List<Map<String, dynamic>>> fetch() async {
-    return sqlite.fetch(tableName);
+  Future<List<Location>> fetch() async {
+    final data = await sqlite.fetch(tableName);
+    return data.map(Location.fromJson).toList();
   }
 
   Future<void> delete() async {
