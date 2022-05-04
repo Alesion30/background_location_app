@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'hooks/use_theme.dart';
-import 'providers/location_data_source_provider.dart';
+import 'providers/location_log_data_source_provider.dart';
 import 'providers/location_provider.dart';
 import 'utils/permission_util.dart';
 
@@ -15,13 +15,28 @@ class HomePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = useTheme();
     final locationStream = ref.watch(locationStreamProvider);
-    final locationDataSource = ref.read(locationDataSourceProvider);
+    final locationLogStream = ref.watch(locationLogStreamProvider);
+    final locationDataSource = ref.read(locationLogDataSourceProvider);
 
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Builder(
+              builder: (context) {
+                return locationLogStream.maybeWhen(
+                  data: (logs) {
+                    return Text(
+                      'log count: ${logs.length}',
+                      style: theme.textTheme.bodyText1,
+                    );
+                  },
+                  orElse: Container.new,
+                );
+              },
+            ),
+            hSpacer(10),
             Builder(
               builder: (context) {
                 return locationStream.when(
@@ -41,19 +56,20 @@ class HomePage extends HookConsumerWidget {
                           style: theme.textTheme.bodyText1,
                         ),
                         hSpacer(20),
-                        ElevatedButton(
-                          onPressed: () => locationDataSource.add(loc),
-                          child: const Text('データ保存'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final data = await locationDataSource.fetch();
-                            if (kDebugMode) {
-                              print(data);
-                            }
-                          },
-                          child: const Text('データ取得'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () => locationDataSource.add(loc),
+                        //   child: const Text('データ保存'),
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     final data = await locationDataSource.fetch();
+                        //     if (kDebugMode) {
+                        //       print(data);
+                        //       print('データ数: ${data.length}');
+                        //     }
+                        //   },
+                        //   child: const Text('データ取得'),
+                        // ),
                         ElevatedButton(
                           onPressed: locationDataSource.delete,
                           child: const Text('データ削除'),
