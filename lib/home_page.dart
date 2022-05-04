@@ -1,8 +1,10 @@
 import 'package:background_location_app/widgets/spacer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'hooks/use_theme.dart';
+import 'providers/location_data_source_provider.dart';
 import 'providers/location_provider.dart';
 import 'utils/permission_util.dart';
 
@@ -13,6 +15,7 @@ class HomePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = useTheme();
     final locationStream = ref.watch(locationStreamProvider);
+    final locationDataSource = ref.read(locationDataSourceProvider);
 
     return Scaffold(
       body: Center(
@@ -37,6 +40,24 @@ class HomePage extends HookConsumerWidget {
                           'speed: ${loc.speed}',
                           style: theme.textTheme.bodyText1,
                         ),
+                        hSpacer(20),
+                        ElevatedButton(
+                          onPressed: () => locationDataSource.add(loc),
+                          child: const Text('データ保存'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final data = await locationDataSource.fetch();
+                            if (kDebugMode) {
+                              print(data);
+                            }
+                          },
+                          child: const Text('データ取得'),
+                        ),
+                        ElevatedButton(
+                          onPressed: locationDataSource.delete,
+                          child: const Text('データ削除'),
+                        ),
                       ],
                     );
                   },
@@ -47,19 +68,23 @@ class HomePage extends HookConsumerWidget {
                     );
                   },
                   loading: () {
-                    return Text(
-                      'loading...',
-                      style: theme.textTheme.headline3,
+                    return Column(
+                      children: [
+                        Text(
+                          'loading...',
+                          style: theme.textTheme.headline3,
+                        ),
+                        hSpacer(20),
+                        const ElevatedButton(
+                          onPressed: checkLocationPermission,
+                          child: Text('権限要求'),
+                        )
+                      ],
                     );
                   },
                 );
               },
             ),
-            hSpacer(20),
-            const ElevatedButton(
-              onPressed: checkLocationPermission,
-              child: Text('権限要求'),
-            )
           ],
         ),
       ),
