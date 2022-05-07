@@ -13,5 +13,5 @@ final locationStreamProvider = StreamProvider.autoDispose((ref) {
 
 /// 位置情報ログをリアルタイムで取得
 final locationLogStreamProvider = StreamProvider.autoDispose((ref) {
-  return ref.watch(locationLogDataSourceProvider).stream();
+  return ref.watch(locationLogDataSourceProvider).stream;
 });

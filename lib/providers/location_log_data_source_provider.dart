@@ -43,9 +43,7 @@ class LocationLogDataSource extends ChangeNotifier {
     return data.map(LocationLog.fromJson).toList();
   }
 
-  Stream<List<LocationLog>> stream() {
-    return streamController.stream;
-  }
+  Stream<List<LocationLog>> get stream => streamController.stream;
 
   Future<void> delete() async {
     await sqlite.delete(tableName);
