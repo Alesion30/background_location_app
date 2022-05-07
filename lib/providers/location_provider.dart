@@ -6,6 +6,8 @@ import 'location_log_data_source_provider.dart';
 /// 位置情報をリアルタイムで取得
 final locationStreamProvider = StreamProvider.autoDispose((ref) {
   final location = Location();
+  // ignore: cascade_invocations
+  location.enableBackgroundMode(enable: true);
   final locationLogDataSource = ref.read(locationLogDataSourceProvider);
   location.onLocationChanged.listen(locationLogDataSource.add);
   return location.onLocationChanged;

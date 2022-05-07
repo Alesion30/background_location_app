@@ -1,6 +1,7 @@
 import 'package:background_location_app/widgets/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:location/location.dart';
 
 import 'hooks/use_theme.dart';
 import 'providers/location_log_data_source_provider.dart';
@@ -68,6 +69,10 @@ class HomePage extends HookConsumerWidget {
                         //     }
                         //   },
                         //   child: const Text('データ取得'),
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () => Location().enableBackgroundMode(enable: true),
+                        //   child: const Text('バックグラウンドモード'),
                         // ),
                         ElevatedButton(
                           onPressed: locationDataSource.delete,
